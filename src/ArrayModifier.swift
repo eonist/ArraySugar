@@ -55,10 +55,10 @@ public class ArrayModifier{
      * - Fixme: You could probably use the native: array.replaceRange instead
      * ⚠️️ implement native: arr.insert(contentsOf:at:) bellow
      */
-    public static func splice2<T>(_ arr:inout [T],_ startIdx:Int,_ delCount:Int,_ values:[T] = [])->[T]{
+    public static func splice2<T>(_ arr:inout [T],_ startIdx: Int,_ delCount: Int,_ values: [T] = []) -> [T] {
         let returnArray  = slice2(arr, startIdx, startIdx + delCount)
         arr.removeSubrange(startIdx..<startIdx + delCount)
-        if values.count > 0 {arr.insert(contentsOf: values, at: startIdx)}
+        if !values.isEmpty { arr.insert(contentsOf: values, at: startIdx) }
         return returnArray
     }
     /**
@@ -76,20 +76,20 @@ public class ArrayModifier{
     /**
      * - NOTE: modifies the original array
      * - RETURNS: (returns the original array for convenience, usefull for chaining methods)
-     * - TODO: this can probably be written simpler and more optimized, or could it?  It looks pretty efficient if you think about it
+     * - Fixme: this can probably be written simpler and more optimized, or could it?  It looks pretty efficient if you think about it
      * ## EXAMPLES: ArrayModifier.move([1,2,3,4,5,6,7,8,9], 2, 5) //[1,2,4,5,6,3,7,8,9]
      * - NOTE: There is also the ArrayModifier.indexSwap method which is alot simpler and can probably do the same thing the (indexSwap method may require more or less memory, testing is needed) (unlike swap move is only 1-way)
      * - Fixme: ⚠️️ Use a splice method that doesnt return (more optimized this way)
      * - Fixme: you can also do: let itemToMove = listItems[from];listItems.remove(at: from);listItems.insert(itemToMove, at: to )
      */
-    public static func displace<T>(_ array:inout [T], _ from:Int, _ to:Int) -> [T] {
+    public static func displace<T>(_ array:inout [T], _ from: Int, _ to: Int) -> [T] {
         var from = from
         var to = to
         if to < from {
             _ = array.splice2(to, 0, [array[from]])
             from += 1
             _ = array.splice2(from, 1)
-        }else{
+        } else {
             to += 1
             _ = array.splice2(to, 0, [array[from]])
             _ = array.splice2(from, 1)
@@ -108,7 +108,8 @@ public class ArrayModifier{
      */
     public static func shuffle<T>(_ array:inout [T]) -> [T] {
         for i in 0 ..< (array.count - 1) {
-            let j = Int(arc4random_uniform(UInt32(array.count - i))) + i
+            // ⚠️️ The new random might not work, testing needed ⚠️️
+            let j = Int.random(in: 0..<array.count) // Int(arc4random_uniform(UInt32(array.count - i))) + i
             array.swapAt(i, j)//was: ArrayModifier.swap(&array, array[i], array[j])//the & sign indicates that you confirm that the values will be changed
         }
         return array
@@ -127,7 +128,7 @@ public class ArrayModifier{
      * - NOTE: ArrayModifier.insertAt does the same thing as this method
      * - Fixme: ⚠️️ implement native: arr.insert(contentsOf:at:) bellow
      */
-    public static func addAt<T>(_ array:inout [T], _ item: T, _ index: Int){
+    public static func addAt<T>(_ array:inout [T], _ item: T, _ index: Int) {
         if index == 0 { _ = array.unshift(item) }/*add item at the begining of an array*/
         else if index == array.count { array.append(item) }/*add item at the end of an array*/
         else { _ = array.splice2(index, 0, [item]) }
@@ -135,13 +136,13 @@ public class ArrayModifier{
     /**
      * Removes the object from the array and return the index.
      * - RETURN: the index of the object, -1 if the object is not in the array
-     * - TODO: ⚠️️ should return the array not the index?
-     * - TODO: ⚠️️ can we use indexOf here?
-     * - TODO: ⚠️️ should we use obj:AnyObject and arr[i] === obj ???
+     * - Fixme: ⚠️️ should return the array not the index?
+     * - Fixme: ⚠️️ can we use indexOf here?
+     * - Fixme: ⚠️️ should we use obj:AnyObject and arr[i] === obj ???
      * - IMPORTANT: This compares reference not value
      */
-    public static func remove(_ array:inout [AnyObject], _ object: AnyObject) -> Int {//⚠️️ this method seems pretty useless if it cant work with instances that arnt equatable
-        if let i = array.index(where: { $0 === object }) {
+    public static func remove(_ array:inout [AnyObject], _ object: AnyObject) -> Int { // ⚠️️ this method seems pretty useless if it cant work with instances that arnt equatable
+        if let i = array.firstIndex(where: { $0 === object }) {
             array.remove(at: i)
             return i
         }
@@ -167,7 +168,7 @@ public class ArrayModifier{
      * - IMPORTANT: ⚠️️ compares reference not value, create a similar method if you need to compare value
      */
     public static func removeMany<T>(_ array:inout [T], _ many: [T]) -> [T] {
-        many.forEach{
+        many.forEach {
             let index: Int = ArrayParser.indx(array, $0)
             if index != -1 { array.remove(at: index) }
         }
@@ -194,10 +195,10 @@ public class ArrayModifier{
     public static func removeManyByKey<T>(_ array:inout [[String: T]], _ many: [T], _ key: String) -> [[String: T]] where T: Comparable {
         var i: Int = 0
         while i < array.count {
-            let dict:[String: T] = array[i]
-            let toMatch:T = dict[key]!
+            let dict: [String: T] = array[i]
+            let toMatch: T = dict[key]!
             if(ArrayParser.index(many, toMatch) != -1) {
-                _ = array.splice2(i,1)
+                _ = array.splice2(i, 1)
                 i -= 1
             }
             i += 1
@@ -211,15 +212,16 @@ public class ArrayModifier{
      * - IMPORTANT: ⚠️️ Swift 4 brings arr.shuffled()
      */
     public static func randomize<T>(_ array:inout [T] ) -> [T] {
-        array.sort { Bool, arg  in
-            return ( Int(arc4random()) * 2 ) * 2 - 1 > 0
-        }
-        return array
+//        array.sort { Bool, arg  in
+//            ( Int(arc4random()) * 2 ) * 2 - 1 > 0
+//        }
+//        return array
+      return array.shuffled()
     }
     /**
      * Remove last, insert last, this is new it could go in the AdvanceArrayModifier class
      */
-    public static func pushPop<T>(_ array:inout [T], _ item: T)->[T]{
+    public static func pushPop<T>(_ array:inout [T], _ item: T) -> [T] {
         _ = array.popLast()
         array.append(item)
         return array
@@ -236,16 +238,16 @@ public class ArrayModifier{
      */
     public static func mergeInPlaceAt<T>(_ a:inout [T], _ b:inout [T], _ i: Int) -> [T] {
         if i == 0 {
-            while b.count > 0 {
+            while !b.isEmpty {
                 _ = a.unshift(b.splice2(b.count-1, 1)[0])// :TODO: ⚠️️  if splice is faster than unshift then use splice
             }
         } else if i == a.count {
-            while b.count > 0 {
+            while !b.isEmpty {
                 _ = a.splice2(a.count, 0, b.splice2(0, 1))
             }
         } else {
-            while b.count > 0 {
-                _ = a.splice2(i, 0, b.splice2(b.count-1,1))
+            while !b.isEmpty {
+                _ = a.splice2(i, 0, b.splice2(b.count - 1, 1))
             }
         }
         return a
@@ -260,16 +262,16 @@ public class ArrayModifier{
      * ## EXAMPLES: ArrayModifier.mergeAt([1,2,3], [4,5,6], 1)//[1, 4, 5, 6, 2, 3]
      * - Fixme: ⚠️️ implement native: arr.insert(contentsOf:at:) bellow
      */
-    public static func mergeAt<T>(_ a:inout [T], _ b: [T], _ index: Int) -> [T]{
+    public static func mergeAt<T>(_ a:inout [T], _ b: [T], _ index: Int) -> [T] {
         if index == a.count {a += b}/*if the index is at the end then inout concat the arrays*/
-        else {_ = a.splice2(index, 0, b)}// :TODO: ⚠️️ test if this is correct?
+        else { _ = a.splice2(index, 0, b) }// :Fixme: ⚠️️ test if this is correct?
         return a
     }
     /**
      * Similar to mergeAt, but does not alter the original PARAM a
      * NOTE: Strictly speaking we should move this to ArrayParser, as it doesnt modify anything
      */
-    public static func combineAt<T>(_ a:[T], _ b:[T], _ index:Int) -> [T]{
+    public static func combineAt<T>(_ a: [T], _ b: [T], _ index: Int) -> [T] {
         var a = a
         return mergeAt(&a, b, index)
     }
@@ -281,7 +283,7 @@ public class ArrayModifier{
      * let newArr = ArrayModifier.split(&arr, 3)
      * Swift.print(newArr)//([1, 2, 3], [4, 5, 6])
      */
-    public static func split<T>(_ array:inout [T] ,_ index:Int) -> (a: [T], b: [T]) {
+    public static func split<T>(_ array:inout [T] ,_ index: Int) -> (a: [T], b: [T]) {
         let arrayB: [T] = array.splice2(index, array.count - index) // you can also do this with pop and unshift etc. But I think splice is faster, simpler
         let retVal: ([T], [T]) = (array, arrayB)
         return retVal
@@ -293,12 +295,12 @@ public class ArrayModifier{
      * let newArr = ArrayModifier.splitAtEvery(arr,3)
      * Swift.print(newArr)//[["1", "2", "3"], ["4", "5", "6"]]
      */
-    public static func splitAtEvery<T>(_ array:[T] , _ every:Int = 1 ) -> [[T]] {
+    public static func splitAtEvery<T>(_ array: [T] , _ every: Int = 1 ) -> [[T]] {
         var every = every
         let copy: [T] = array // Create a copy
         var list: [[T]] = []
         every = max(every, 1) // Force value to be 1 or more
-        let len: Int = ceil((copy.count / every).float).int
+        let len: Int = .init(ceil(Float(copy.count / every)))
         var i: Int = 0
         while i < len {
             let a: Int = i * every
@@ -354,9 +356,9 @@ public class ArrayModifier{
      * v = ArrayModifier.reverseRange(v, 2,7)
      * Swift.print("v: " + v);//1,2,7,6,5,4,3,8,9
      */
-    public static func reverseRange<T>(_ vector:inout [T],_ range: Range<Int>) -> [T] {
-        let head: [T] = vector.splice2(0,range.start)
-        let tail: [T] = vector.splice2(range.end-range.start, vector.count - (range.end - range.start))
+    public static func reverseRange<T>(_ vector:inout [T], _ range: Range<Int>) -> [T] {
+        let head: [T] = vector.splice2(0, range.start)
+        let tail: [T] = vector.splice2(range.end - range.start, vector.count - (range.end - range.start))
         let reversedVector: [T] = vector.reversed()
         return head.concat(reversedVector).concat(tail)
     }
@@ -364,7 +366,7 @@ public class ArrayModifier{
      * Removes a range of items from rangeStart to rangeEnd
      * - RETURN: the newly altered array
      */
-    public static func removeRange<T>(_ array:inout [T], _ rangeStart: Int, _ rangeEnd: Int) -> [T]{
+    public static func removeRange<T>(_ array:inout [T], _ rangeStart: Int, _ rangeEnd: Int) -> [T] {
         array.removeSubrange(rangeStart..<rangeEnd)/*was -> array.splice2(rangeStart, rangeEnd - rangeStart)*/
         return array
     }
@@ -375,10 +377,10 @@ public class ArrayModifier{
      * var arr: Array = ["a","b","b","c","b","d","c"]
      * let arr: [String] = ["a","b","b","c","b","d","c"];var z:[String] = [] Swift.print(arr.forEach{if(z.index(of: $0) == nil) {z.append($0)}})//["a", "b", "c", "d"]
      */
-    public static func removeDuplicates<T>(_ array: [T]) -> [T] where T: Comparable{
+    public static func removeDuplicates<T>(_ array: [T]) -> [T] where T: Comparable {
         var result: [T] = []
-        array.forEach{
-            if result.index(of: $0) == nil { result.append($0) } // append if doesn't exists
+        array.forEach {
+            if result.firstIndex(of: $0) == nil { result.append($0) } // append if doesn't exists
         }
         return result
     }
@@ -391,9 +393,11 @@ public class ArrayModifier{
      */
     public static func removeDups<T>(_ arr: [T], _ condition: (_ a: T, _ b: T) -> Bool) -> [T] {
         var result: [T] = []
-        arr.forEach { item in
-            if result.first { condition(item, $0) } == nil { result.append(item) }//append if doesn't exists
-        }
+         arr.forEach { item in
+            if result.first(where: { condition(item, $0) }) == nil {
+               result.append(item)
+            }//append if doesn't exists
+         }
         return result
     }
     /**
@@ -407,9 +411,9 @@ public class ArrayModifier{
      * Swift.print(arr)//0, 1, 2, 4, 5
      */
     public static func numericSort(_ array:inout [Int]) -> [Int]{
-        for i in 1..<array.count{
+        for i in 1..<array.count {
             var e: Int = i
-            while e > 0 && array[i] < array[e-1] {
+            while e > 0 && array[i] < array[e - 1] {
                 e -= 1
             }
             _ = ArrayModifier.displace(&array, i, e)
@@ -458,7 +462,7 @@ public class ArrayModifier{
      * [a,b,c].shiftAppend(d)//[b,c,d]
      * - CAUTION: [0,0,0,0,5].avg//1 Sometimes you want this to result in 5. use [].filter{$0 != 0} to remove 0
      */
-    public static func shiftAppend<T>(_ arr:inout [T], _ item: T) -> [T]{
+    public static func shiftAppend<T>(_ arr:inout [T], _ item: T) -> [T] {
         _ = arr.shift()
         arr.append(item)
         return arr

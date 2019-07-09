@@ -27,7 +27,7 @@ public class AdvanceArrayModifier {
     public static func sortToHighestDepths(_ indices: [[Int]]) -> [[Int]] {
         var sortedIndices: [[Int]] = []
         let numOfindices: Int = indices.count
-        for i in 0..<numOfindices{
+        for i in 0..<numOfindices {
             let index: [Int] = indices[i]
             let indicesIndex: Int = AdvanceArrayParser.index(index, indices)
             ArrayModifier.addAt(&sortedIndices, index, indicesIndex)
@@ -43,7 +43,7 @@ public class AdvanceArrayModifier {
     */
    public static func scaleArr(arr: [Int], size:(width: Int, height: Int), scale: Int) -> [Int] {
       return (0..<size.width * 2).flatMap { x in
-         return (0..<size.height * 2).map { y in
+         (0..<size.height * 2).map { y in
             let i = x / 2 * size.width + y / 2
             let item: Int = arr[i]
             return item

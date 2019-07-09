@@ -19,7 +19,7 @@ public class ArrayParser{
      * indexOf(["Apples", "Peaches", "Plums"],"Peaches")//1
      */
     public static func index<T>(_ array : [T], _ value: T) -> Int where T: Comparable{//the <T: Comparable> The Comparable protocol extends the Equatable protocol -> implement both of them
-        return array.index(of: value) ?? -1
+        return array.firstIndex(of: value) ?? -1
     }
     /**
      * - NOTE: If you want to compare values rather than references. Then use the "==" compare operator and make sure you test if an instance is of String or Int or CGFloat etc. and then cast it to that type before you attempt to use the "==" operator. AnyObject in of it self cant be tested with the == operator. I can definitely see the use case for testing value rather than ref.
@@ -28,7 +28,7 @@ public class ArrayParser{
      * - Fixme: ⚠️️ maybe this can be cleaned up with Any?
      */
     public static func indx<T>(_ arr: [T], _ item: T) -> Int{//<--use inout for both args?
-        return arr.index { ($0 as AnyObject) === (item as AnyObject)} ?? -1
+        return arr.firstIndex { ($0 as AnyObject) === (item as AnyObject)} ?? -1
     }
     /**
      * - NOTE: I feel this is the best implementation as it doesn't copy anything, "direct comparison" with the inout args
@@ -36,7 +36,7 @@ public class ArrayParser{
      * - NOTE: Compares reference not value
      */
     public static func idx<T>(_ arr:inout [T], _ item:inout T) -> Int{
-        return arr.index { ($0 as AnyObject) === (item as AnyObject) } ?? -1//we cast to AnyObject because generics can't ref compare, but AnyObject can
+        return arr.firstIndex { ($0 as AnyObject) === (item as AnyObject) } ?? -1//we cast to AnyObject because generics can't ref compare, but AnyObject can
     }
     /**
      * Returns the index of the first instance that matches the PARAM: item in the PARAM: arr, -1 of none is found
@@ -45,7 +45,7 @@ public class ArrayParser{
      * - IMPORTANT: compares reference not value
      */
     public static func indexOf(_ arr:[AnyObject],_ item:AnyObject)-> Int{
-        return arr.index(where: {$0 === item}) ?? -1
+        return arr.firstIndex(where: {$0 === item}) ?? -1
     }
     /**
      * Returns an array with itmes that are not the same in 2 arrays
@@ -66,8 +66,8 @@ public class ArrayParser{
      */
     public static func diff<T>(_ a: [T], _ b: [T] ) -> (a: [Int], b: [Int]) where T: Comparable{
         var (diffA, diffB): ([Int], [Int]) = ([], [])
-        for (i, item) in a.enumerated() { if (b.index(of: item) == nil) { diffA.append(i) } }
-        for (i, item) in b.enumerated() { if (a.index(of: item) == nil) { diffB.append(i) } }
+        for (i, item) in a.enumerated() { if (b.firstIndex(of: item) == nil) { diffA.append(i) } }
+        for (i, item) in b.enumerated() { if (a.firstIndex(of: item) == nil) { diffB.append(i) } }
         return (a: diffA, b: diffB)
     }
     /**
@@ -228,8 +228,8 @@ public class ArrayParser{
      * - Important ⚠️️ Swift 4.1 has array.randomElement()
      */
     public static func randomItem<T>(array: [T]) -> T? {
-      if isEmpty { return nil }
-      let index = Int(arc4random_uniform(UInt32(self.count)))
+      if array.isEmpty { return nil }
+      let index = Int(arc4random_uniform(UInt32(array.count)))
       return array[index]
    }
 }

@@ -16,7 +16,7 @@ public class ArrayAsserter {
     public static func contains<T:Equatable>(_ a: [T], _ b: [T], _ strict: Bool = false) -> Bool {
         var score:Int = 0
         a.forEach{ x in
-            if b.index(of: x) != nil {
+            if b.firstIndex(of: x) != nil {
                 score += 1
             }
         }

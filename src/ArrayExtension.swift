@@ -1,4 +1,5 @@
 import Foundation
+import RangeSugarIOS
 /**
  * Mutating
  */
@@ -117,7 +118,7 @@ extension Array {
      * Asserts if PARAM: idx is within the bounds of the array
      */
     public func valid(_ idx: Int) -> Bool{
-        return self.count > 0 && idx > -1 && idx < self.count
+        return !self.isEmpty && idx > -1 && idx < self.count
     }
     public func first(_ match: Element, _ condition: (_ a: Element, _ b: Element) -> Bool) -> Element? {
         return ArrayParser.first(self, match, condition)
@@ -135,12 +136,12 @@ extension Array {
         return self.isEmpty ? nil : self
     }
     public var start: Element? { // new
-        get{return self.first}
-        set{self[0] = newValue!}
+        get { return self.first }
+        set { self[0] = newValue! }
     }
     public var end: Element? {//new
         get { return self.last }
-        set { self[self.count == 0 ? 0 : self.count - 1] = newValue! }
+        set { self[self.isEmpty ? 0 : self.count - 1] = newValue! }
     }
     /**
      * - RATIONAL 1: Enhances readability when doing `if let` style coding
@@ -160,7 +161,7 @@ extension Array {
  * NOTE: only applicable to Array<AnyObject>
  */
 extension Array where Element: AnyObject {
-    public func indexOf(_ item: AnyObject) -> Int{
+    public func indexOf(_ item: AnyObject) -> Int {
         return ArrayParser.indexOf(self, item)
     }
 }
@@ -169,7 +170,7 @@ extension Array where Element: Comparable {
         return ArrayParser.index(self, value)
     }
     public func has(_ value: Element) -> Bool {
-        return self.index(of: value) != nil
+        return self.firstIndex(of: value) != nil
     }
     /**
     * Returns the last index that match condition
@@ -179,11 +180,11 @@ extension Array where Element: Comparable {
     */
    public func lastIndex(where condition: (Element) -> Bool) -> Int? {
       guard let idx:Int = self.reversed().firstIndex(where: condition) else {return nil}
-      return self.count-1-idx
+      return self.count - 1 - idx
    }
 }
 extension Array where Element: Equatable {
-    public func existAtOrBefore(_ idx: Int, _ item: Element) -> Bool{
+    public func existAtOrBefore(_ idx: Int, _ item: Element) -> Bool {
         return ArrayAsserter.existAtOrBefore(self, idx, item)
     }
 }
@@ -191,7 +192,7 @@ extension Array where Element: Equatable {
  * [1,2,3].string//"123"
  * - NOTE: you can also use .joined but reduce does the same I suppose
  */
-extension Array where Element: BinaryInteger{
+extension Array where Element: BinaryInteger {
     public var string: String { return self.map { "\($0)" }.reduce("") { $0 + $1 } }
 }
 //extension Array where Element:ExpressibleByStringLiteral{
@@ -202,16 +203,17 @@ extension Collection where Iterator.Element == String {//SubSequence.Iterator.El
 }
 
 public protocol AnyArray {}/*<--Neat trick to assert if a value is an Array, use-full in reflection and when the value is Any but really an array*/
-public extension Array: AnyArray {}//Maybe rename to ArrayType
-public extension NSArray: AnyArray{}/*<-empty arrays are always NSArray so this is needed*/
+extension Array: AnyArray {}//Maybe rename to ArrayType
+extension NSArray: AnyArray {}/*<-empty arrays are always NSArray so this is needed*/
 
 /**
+ * ## Examples
  * var arr = [1,2,3]
  * arr += 4
  * print(arr)//1,2,3,4
  * - Returns array for the sake of convenience
  */
-public func +=<T> ( left:inout [T], right: T) -> [T] {/**/
+public func +=<T> ( left:inout [T], right: T) -> [T] {
     left.append(right)
     return left
 }

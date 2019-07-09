@@ -1,28 +1,29 @@
 import Foundation
 
-public class BinarySearch{
+public class BinarySearch {
     /**
      * Finds a correct index to insert an item at
      * - Description: Basically the binaryIndex finds the next index or the end index in a sorted array
-     * EXAMPLE: let key = 11
-     * EXAMPLE: var numbers = [9,15,91]
-     * EXAMPLE: let idx = binaryIndex(numbers,key,0,numbers.count)//1
-     * EXAMPLE: if idx >= numbers.count || numbers[idx] != key {numbers.insert(key, at: idx)}
-     * EXAMPLE: print(numbers)//[9,11,15,91]
-     * NOTE: we use a closure because protocols can't have comparable
-     * TODO: ⚠️️ Try to get rid of the closure by using Element and Collection. See the Array types.
+     * ## EXAMPLES:
+     * let key = 11
+     * var numbers = [9,15,91]
+     * let idx = binaryIndex(numbers,key,0,numbers.count)//1
+     * if idx >= numbers.count || numbers[idx] != key {numbers.insert(key, at: idx)}
+     * print(numbers)//[9,11,15,91]
+     * - NOTE: we use a closure because protocols can't have comparable
+     * - Fixme: ⚠️️ Try to get rid of the closure by using Element and Collection. See the Array types.
      */
     public typealias BinaryIndexClosure = (Any) -> Int
-    public static func binaryIndex<T>(_ arr:[T], i:T, start:Int, end:Int, closure:BinaryIndexClosure = {$0 as! Int}) -> Int{//the closure works if T is Int
+    public static func binaryIndex<T>(_ arr: [T], i:T, start: Int, end:Int, closure:BinaryIndexClosure = {$0 as! Int}) -> Int{//the closure works if T is Int
         if start == end {
             return start//i doesn't exist, this is the closest at: \(start)
         }
         let mid:Int = start + ((end - start) / 2)/*start + middle of the distance between start and end*/
-        if closure(i) < closure(arr[mid]){/*index is in part1*/
-            return binaryIndex(arr,i:i,start:start,end:mid,closure:closure)
-        }else if closure(i) > closure(arr[mid]) {/*index is in part2*/
-            return binaryIndex(arr,i:i,start:mid+1,end:end,closure:closure)
-        }else{/*index is at middleIndex*/
+        if closure(i) < closure(arr[mid]) {/*index is in part1*/
+            return binaryIndex(arr, i: i, start: start, end: mid, closure: closure)
+        } else if closure(i) > closure(arr[mid]) {/*index is in part2*/
+            return binaryIndex(arr, i: i, start: mid + 1, end: end, closure: closure)
+        } else {/*index is at middleIndex*/
             return mid
         }
     }
@@ -34,7 +35,7 @@ public class BinarySearch{
     public static func binarySearch<T: Comparable>(_ a: [T], key: T, range: Range<Int>) -> Int? {
         if range.lowerBound >= range.upperBound {
             return nil// If we get here, then the search key is not present in the array.
-        }else{
+        } else {
             let midIndex = range.lowerBound + (range.upperBound - range.lowerBound) / 2// Calculate where to split the array.
             if a[midIndex] > key {// Is the search key in the left half?
                 return binarySearch(a, key: key, range: range.lowerBound ..< midIndex)

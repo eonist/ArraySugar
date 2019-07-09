@@ -1,0 +1,10 @@
+{
+  "commitish" : "dcca3cc8f02aaada24600e701cdc000c5dd7d3ae",
+  "iOS" : [
+    {
+      "name" : "RangeSugarIOS",
+      "hash" : "0b80c19daf32fc3996d134e14a5c03c7b04c6394bd5fc7a33e3cf7f39e50209c",
+      "swiftToolchainVersion" : "5.0 (swiftlang-1001.0.69.5 clang-1001.0.46.3)"
+    }
+  ]
+}
