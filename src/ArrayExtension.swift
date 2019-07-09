@@ -19,7 +19,7 @@ extension Array {
     /**
      * Convenience method
      */
-    public mutating func pushPop(_ item:Element) -> [Element]{/*convenience*/
+    public mutating func pushPop(_ item: Element) -> [Element] {/*convenience*/
         return ArrayModifier.pushPop(&self, item)
     }
     /**
@@ -43,7 +43,7 @@ extension Array {
     /**
      * Convenience method
      */
-    public mutating func unshift(_ item: Element) -> Int{
+    public mutating func unshift(_ item: Element) -> Int {
         return ArrayModifier.unshift(&self, item)
     }
     /**
@@ -74,7 +74,7 @@ extension Array {
     /**
      * Convenience method
      */
-    public mutating func insertAt(_ item:Element, _ index:Int) -> [Element] {
+    public mutating func insertAt(_ item: Element, _ index: Int) -> [Element] {
         return ArrayModifier.insertAt(&self, item, index)
     }
     /**
@@ -117,7 +117,7 @@ extension Array {
     /**
      * Asserts if PARAM: idx is within the bounds of the array
      */
-    public func valid(_ idx: Int) -> Bool{
+    public func valid(_ idx: Int) -> Bool {
         return !self.isEmpty && idx > -1 && idx < self.count
     }
     public func first(_ match: Element, _ condition: (_ a: Element, _ b: Element) -> Bool) -> Element? {
@@ -126,7 +126,7 @@ extension Array {
     public func removeDups( _ condition:(_ a: Element, _ b: Element) -> Bool) -> [Element] {
         return ArrayModifier.removeDups(self, condition)
     }
-    public func mapReduce<V,U>(_ result: V, _ closure:@escaping (_ interim: V, _ item: Element) -> V ) -> U {
+    public func mapReduce<V, U>(_ result: V, _ closure:@escaping (_ interim: V, _ item: Element) -> V ) -> U {
         return ArrayParser.mapReduce(self, result, closure)
     }
     /**
@@ -147,7 +147,7 @@ extension Array {
      * - RATIONAL 1: Enhances readability when doing `if let` style coding
      * - RATIONAL 2: using if let in conjunction with array avoids out of bound crashing
      * - NOTE: Performance wise `self.dropFirst(at).first` is as fast as doing .contain,
-     * - ⚠️️IMPORTANT:⚠️️ Do not use this with arrays such as :[Int?], TODO: ⚠️️ should we rather do idx < .count?
+     * - ⚠️️IMPORTANT:⚠️️ Do not use this with arrays such as :[Int?], Fixme: ⚠️️ should we rather do idx < .count?
      * ## EXAMPLES:
      * if let item = [a,b,c,d][safe:3] {print(item)}
      * - Note: you can also do Optional(arr[4]) maybe?
@@ -179,7 +179,7 @@ extension Array where Element: Comparable {
     * - Note: This is now an native method: dataArr.lastIndex(where: {})
     */
    public func lastIndex(where condition: (Element) -> Bool) -> Int? {
-      guard let idx:Int = self.reversed().firstIndex(where: condition) else {return nil}
+      guard let idx: Int = self.reversed().firstIndex(where: condition) else { return nil }
       return self.count - 1 - idx
    }
 }
@@ -206,27 +206,30 @@ public protocol AnyArray {}/*<--Neat trick to assert if a value is an Array, use
 extension Array: AnyArray {}//Maybe rename to ArrayType
 extension NSArray: AnyArray {}/*<-empty arrays are always NSArray so this is needed*/
 
-/**
- * ## Examples
- * var arr = [1,2,3]
- * arr += 4
- * print(arr)//1,2,3,4
- * - Returns array for the sake of convenience
- */
-public func +=<T> ( left:inout [T], right: T) -> [T] {
-    left.append(right)
-    return left
+extension Array {
+   /**
+    * ## Examples
+    * var arr = [1,2,3]
+    * arr += 4
+    * print(arr)//1,2,3,4
+    * - Returns array for the sake of convenience
+    */
+   public static func +=<T> ( left:inout [T], right: T) -> [T] {
+      left.append(right)
+      return left
+   }
+   /**
+    * var arr = [2,3,4]
+    * 1 += arr
+    * print(arr)//1,2,3,4
+    * - Returns array for the sake of convenience
+    */
+   public static func +=<T> (left: T, right:inout [T]) -> [T] {
+      _ = right.unshift(left) // <--this is like prepend
+      return right
+   }
 }
-/**
- * var arr = [2,3,4]
- * 1 += arr
- * print(arr)//1,2,3,4
- * - Returns array for the sake of convenience
- */
-public func +=<T> (left: T, right:inout [T]) -> [T] {
-    _ = right.unshift(left) // <--this is like prepend
-    return right
-}
+
 /*Advance array extensions*/
 extension Collection {
    /**

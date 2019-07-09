@@ -13,9 +13,9 @@ public class ArrayAsserter {
      * ArrayAsserter.contains([1,2,3], [1,2], false)//true
      * ArrayAsserter.contains([1,2,3], [1,2], true)//false, the length of a and b must be the same
      */
-    public static func contains<T:Equatable>(_ a: [T], _ b: [T], _ strict: Bool = false) -> Bool {
-        var score:Int = 0
-        a.forEach{ x in
+    public static func contains<T: Equatable>(_ a: [T], _ b: [T], _ strict: Bool = false) -> Bool {
+        var score: Int = 0
+        a.forEach { x in
             if b.firstIndex(of: x) != nil {
                 score += 1
             }
@@ -33,14 +33,14 @@ public class ArrayAsserter {
      * Swift.print(ArrayAsserter.has(["e","f","g"], "f"))//true
      * Swift.print(ArrayAsserter.has(["e","f","g"], "a"))//false
      */
-    public static func has<T>(_ arr : [T], _ value: T) -> Bool where T: Comparable {//the <T: Equatable> part ensures that the types can use the equal operator ==
+    public static func has<T>(_ arr: [T], _ value: T) -> Bool where T: Comparable { //the <T: Equatable> part ensures that the types can use the equal operator ==
         return ArrayParser.index(arr, value) != -1
     }
     /**
      * - IMPORTANT: ⚠️️ use none optional variables in the PARAM: arr and the PARAM: item
      * - NOTE: Works by comparing references, not values. Use the other has method if you want to compare value.
      */
-    public static func has<T>(_ arr: [T],_ item: T) -> Bool {
+    public static func has<T>(_ arr: [T], _ item: T) -> Bool {
         return ArrayParser.indx(arr, item) != -1
     }
     /**
@@ -48,8 +48,8 @@ public class ArrayAsserter {
      * ["a","b","c"].has("b",{$0 == $1})//true
      * - NOTE: You can also do: ["a","b","c"].index(where: {$0 == frameData}) != nil
      */
-    public static func has<T,V>(_ variables: [T],_ match: V,_ method: @escaping (T,V) -> Bool) -> Bool  where V: Equatable {
-        return ArrayParser.first(variables, match, method) != nil
+    public static func has<T, V>(_ variables: [T], _ match: V, _ method: @escaping (T, V) -> Bool) -> Bool where V: Equatable {
+      return variables.contains { method($0, match) }//ArrayParser.first(variables, match, method) != nil
     }
     /**
      * Asserts if two arrays are identical, a boolean is returned depending on the equality of two arrays (must be in the same order)
@@ -60,11 +60,9 @@ public class ArrayAsserter {
      * - IMPORTANT: ⚠️️ This method compares reference not value
      */
     public static func equals<T>(_ a: [T], _ b: [T]) -> Bool {
-        if a.count != b.count  { return false }
-        for i in 0..<a.count {
-            if (a[i] as AnyObject) !== (b[i] as AnyObject) {
-                return false
-            }
+        if a.count != b.count { return false }
+        for i in 0..<a.count where (a[i] as AnyObject) !== (b[i] as AnyObject) {
+           return false
         }
         return true
     }
@@ -78,10 +76,10 @@ public class ArrayAsserter {
      * - EXAMPLE: ArrayAsserter.equals([1,2], [1,2])//true
      * - <fixme: ⚠️️ create add this method to ArrayExtensions
      */
-    public static func equals<T>(_ a:[T], _ b:[T]) -> Bool where T: Comparable {
+    public static func equals<T>(_ a: [T], _ b: [T]) -> Bool where T: Comparable {
         if a.count != b.count { return false }
-        for i in 0..<a.count {
-            if a[i] != b[i] { return false }
+        for i in 0..<a.count where a[i] != b[i] {
+            return false
         }
         return true
     }
@@ -89,9 +87,9 @@ public class ArrayAsserter {
      * Asserts if an item is at or before PARAM: idx
      * NOTE: Usefull in conjunction with ArrayModifier.insertAt()// to assert if an item already exists at that idx or not. to avoid dups
      */
-    public static func existAtOrBefore<T>(_ arr: [T],_ idx: Int, _ item: T) -> Bool where T: Equatable {
+    public static func existAtOrBefore<T>(_ arr: [T], _ idx: Int, _ item: T) -> Bool where T: Equatable {
         func itemAlreadyExistAtIdx() -> Bool { return (arr.valid(idx) && arr[idx] == item) }
-        func itemExistsAtIdxBefore() -> Bool { return (arr.valid(idx-1) && arr[idx-1] == item) }
+        func itemExistsAtIdxBefore() -> Bool { return (arr.valid(idx - 1) && arr[idx - 1] == item) }
         return itemAlreadyExistAtIdx() || itemExistsAtIdxBefore()
     }
     /**

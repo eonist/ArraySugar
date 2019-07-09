@@ -2,7 +2,7 @@ import Foundation
 /**
  * There is also: dropLast and dropFirst: Swift.print("arr: " + "\(Array([0,1,2,3].dropLast()))")//[0, 1, 2]
  */
-public class ArrayModifier{
+public class ArrayModifier {
     /**
      * Adds one or more elements to the beginning of an array and returns the new length of the array.
      * - NOTE: The other elements in the array are moved from their
@@ -13,8 +13,8 @@ public class ArrayModifier{
      * print(arr)//[x,a,b,c,d]
      * - Returns: An integer representing the new length of the array
      */
-    public static func unshift<T>(_ array: inout [T],_ item:T, _ index:Int = 0) -> Int {
-        array.insert(item,at:index)
+    public static func unshift<T>(_ array: inout [T], _ item: T, _ index: Int = 0) -> Int {
+        array.insert(item, at: index)
         return array.count
     }
     /**
@@ -25,14 +25,14 @@ public class ArrayModifier{
      * Swift.print("a.shift(): " + "\(a.shift())")//a
      * Swift.print("a: " + "\(a)")//b,c
      */
-    public static func shift<T>(_ array: inout [T])->T{
+    public static func shift<T>(_ array: inout [T]) -> T {
         return array.removeFirst()
     }
     /**
      * Removes the last element from an array and returns the value of that element.
      * - NOTE: try using the native: .popLast()
      */
-    public static func pop<T>(_ array:inout [T])->T? {
+    public static func pop<T>(_ array:inout [T]) -> T? {
         let last = array.last
         if let last = last {
             array.removeLast()
@@ -55,8 +55,8 @@ public class ArrayModifier{
      * - Fixme: You could probably use the native: array.replaceRange instead
      * ⚠️️ implement native: arr.insert(contentsOf:at:) bellow
      */
-    public static func splice2<T>(_ arr:inout [T],_ startIdx: Int,_ delCount: Int,_ values: [T] = []) -> [T] {
-        let returnArray  = slice2(arr, startIdx, startIdx + delCount)
+    public static func splice2<T>(_ arr:inout [T], _ startIdx: Int, _ delCount: Int, _ values: [T] = []) -> [T] {
+        let returnArray = slice2(arr, startIdx, startIdx + delCount)
         arr.removeSubrange(startIdx..<startIdx + delCount)
         if !values.isEmpty { arr.insert(contentsOf: values, at: startIdx) }
         return returnArray
@@ -70,7 +70,7 @@ public class ArrayModifier{
      * - IMPORTANT: ⚠️️ you can also use the native [1,2,3,4,5][0..<3]//[1,2,3]//⚠️️ does not support all array types, Casting as array helps sometimes: Array([1,2,3,4,5][0..<3])
      * - Fixme: ⚠️️ should probably be moved to ArrayParser?
      */
-    public static func slice2<T>(_ array:[T],_ startIndex:Int, _ endIndex:Int)->[T]{//TODO:Rename this to just slice, soon!
+    public static func slice2<T>(_ array: [T], _ startIndex: Int, _ endIndex: Int) -> [T] { // Fixme: Rename this to just slice, soon!
         return Array(array[startIndex..<endIndex])
     }
     /**
@@ -102,7 +102,7 @@ public class ArrayModifier{
      * - NOTE: If you want to be able to replicate a shuffle or series of shuffles, choose and seed a specific random source; e.g.
      * - NOTE: GKLinearCongruentialRandomSource(seed: mySeedValue).arrayByShufflingObjectsInArray(array)
      * ## EXAMPLES:
-     * shuffle([1, 2, 3, 4, 5, 6, 7, 8])// e.g., [4, 2, 6, 8, 7, 3, 5, 1]
+     * shuffle([1, 2, 3, 4, 5, 6, 7, 8]) // e.g., [4, 2, 6, 8, 7, 3, 5, 1]
      * - Fixme: ⚠️️ You should add the disregard attribute above this method
      * - IMPORTANT: ⚠️️ Since swift 4 there is: [1, 2, 3, 4].shuffle()
      */
@@ -157,7 +157,7 @@ public class ArrayModifier{
     /**
      * - Fixme: ⚠️️ I think you can also use: array.removeFirst(n: Int)
      */
-    public static func removeAt<T>(_ array:inout [T],_ i: Int) -> T {//<--the return statement was recently added
+    public static func removeAt<T>(_ array:inout [T], _ i: Int) -> T {//<--the return statement was recently added
         return array.remove(at: i)//was -> return array.splice2(i, 1)[0]
     }
     /**
@@ -197,7 +197,7 @@ public class ArrayModifier{
         while i < array.count {
             let dict: [String: T] = array[i]
             let toMatch: T = dict[key]!
-            if(ArrayParser.index(many, toMatch) != -1) {
+            if ArrayParser.index(many, toMatch) != -1 {
                 _ = array.splice2(i, 1)
                 i -= 1
             }
@@ -239,7 +239,7 @@ public class ArrayModifier{
     public static func mergeInPlaceAt<T>(_ a:inout [T], _ b:inout [T], _ i: Int) -> [T] {
         if i == 0 {
             while !b.isEmpty {
-                _ = a.unshift(b.splice2(b.count-1, 1)[0])// :TODO: ⚠️️  if splice is faster than unshift then use splice
+                _ = a.unshift(b.splice2(b.count - 1, 1)[0])// :Fixme: ⚠️️  if splice is faster than unshift then use splice
             }
         } else if i == a.count {
             while !b.isEmpty {
@@ -263,7 +263,7 @@ public class ArrayModifier{
      * - Fixme: ⚠️️ implement native: arr.insert(contentsOf:at:) bellow
      */
     public static func mergeAt<T>(_ a:inout [T], _ b: [T], _ index: Int) -> [T] {
-        if index == a.count {a += b}/*if the index is at the end then inout concat the arrays*/
+        if index == a.count { a += b } /*if the index is at the end then inout concat the arrays*/
         else { _ = a.splice2(index, 0, b) }// :Fixme: ⚠️️ test if this is correct?
         return a
     }
@@ -283,7 +283,7 @@ public class ArrayModifier{
      * let newArr = ArrayModifier.split(&arr, 3)
      * Swift.print(newArr)//([1, 2, 3], [4, 5, 6])
      */
-    public static func split<T>(_ array:inout [T] ,_ index: Int) -> (a: [T], b: [T]) {
+    public static func split<T>(_ array:inout [T], _ index: Int) -> (a: [T], b: [T]) {
         let arrayB: [T] = array.splice2(index, array.count - index) // you can also do this with pop and unshift etc. But I think splice is faster, simpler
         let retVal: ([T], [T]) = (array, arrayB)
         return retVal
@@ -295,7 +295,7 @@ public class ArrayModifier{
      * let newArr = ArrayModifier.splitAtEvery(arr,3)
      * Swift.print(newArr)//[["1", "2", "3"], ["4", "5", "6"]]
      */
-    public static func splitAtEvery<T>(_ array: [T] , _ every: Int = 1 ) -> [[T]] {
+    public static func splitAtEvery<T>(_ array: [T], _ every: Int = 1 ) -> [[T]] {
         var every = every
         let copy: [T] = array // Create a copy
         var list: [[T]] = []
@@ -342,7 +342,7 @@ public class ArrayModifier{
      * ## EXAMPLES:
      * ArrayModifier.rangeDisplace(Array.<String>(["a","b","c","d","e","f","g"]), 2,4, 0);//c,d,a,b,e,f,g
      */
-    public static func rangeDisplace<T>(_ array:inout [T],_ range: Range<Int>, _ index: Int) -> [T] {
+    public static func rangeDisplace<T>(_ array:inout [T], _ range: Range<Int>, _ index: Int) -> [T] {
         let splice: [T] = array.splice2(range.start, range.end - range.start) // <-- You could probably use range.length here
         return ArrayModifier.mergeAt(&array, splice, index) // it could be more memory efficient to use mergeInPlaceAt here, tests is need to confirm
     }
@@ -396,7 +396,7 @@ public class ArrayModifier{
          arr.forEach { item in
             if result.first(where: { condition(item, $0) }) == nil {
                result.append(item)
-            }//append if doesn't exists
+            } // append if doesn't exists
          }
         return result
     }
@@ -410,7 +410,7 @@ public class ArrayModifier{
      * ArrayModifier.numericSort(&arr)
      * Swift.print(arr)//0, 1, 2, 4, 5
      */
-    public static func numericSort(_ array:inout [Int]) -> [Int]{
+    public static func numericSort(_ array:inout [Int]) -> [Int] {
         for i in 1..<array.count {
             var e: Int = i
             while e > 0 && array[i] < array[e - 1] {
