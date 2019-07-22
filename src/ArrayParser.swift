@@ -28,6 +28,7 @@ public class ArrayParser {
      * - Fixme: ⚠️️ maybe this can be cleaned up with Any?
      */
     public static func indx<T>(_ arr: [T], _ item: T) -> Int { // <--use inout for both args?
+      // Fixme: ⚠️️ I dont think the casting to anyobject is needed
         return arr.firstIndex { ($0 as AnyObject) === (item as AnyObject) } ?? -1
     }
     /**

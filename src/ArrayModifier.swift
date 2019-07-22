@@ -149,16 +149,19 @@ public class ArrayModifier {
         return -1
     }
     /**
-     * - Note: compres and deletes reference "===" not "=="
-     */
-    public static func delete<T>(_ arr:inout [T], _ obj:inout T) -> T {
-        return arr.remove(at: ArrayParser.idx(&arr, &obj))
-    }
-    /**
      * - Fixme: ⚠️️ I think you can also use: array.removeFirst(n: Int)
      */
-    public static func removeAt<T>(_ array:inout [T], _ i: Int) -> T {//<--the return statement was recently added
+    public static func removeAt<T>(array:inout [T], i: Int) -> T { //<--the return statement was recently added
         return array.remove(at: i)//was -> return array.splice2(i, 1)[0]
+    }
+    /**
+     * - Note: compares and deletes reference "===" not "=="
+     */
+    public static func delete<T>(_ arr:inout [T], _ item:inout T) -> T? {
+       if let i = arr.firstIndex(where: { ($0 as AnyObject) === (item as AnyObject) }) {
+          return arr.remove(at: i)
+       }
+       return nil
     }
     /**
      * Returns PARAM: array with out the items in PARAM: these

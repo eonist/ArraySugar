@@ -2,6 +2,7 @@ import Foundation
 import RangeSugarIOS
 /**
  * Mutating
+ * Fixme: split into extensions
  */
 extension Array {
    /**
@@ -53,12 +54,25 @@ extension Array {
         return ArrayModifier.unshift(&self, item)
     }
     /**
-     * - NOTE: there is also native: removeAtIndex(index: Int) -> Element
+     * - Note: there is also native: removeAtIndex(index: Int) -> Element
      * - Remark: 1 equals, does not exist
      */
     public mutating func removeAt(_ i: Int) {
-        if i != -1 { _ = self.splice2(i, 1) }
+      ArrayModifier.removeAt(self, i)
+        //if i != -1 { _ = self.splice2(i, 1) }
     }
+
+   /**
+    * Removes first item in array if available
+    * ## Examples:
+    * var arr = ["1","2"]
+    * arr.removeFirst("1")
+    * Swift.print("arr:  \(arr)") // ["2"]
+    */
+   @discardableResult
+   public mutating func removeFirst(_ item: Element) -> Element? {
+      return ArrayModifier.delete(self, item)
+   }
     /**
      * Convenience method
      */
@@ -150,7 +164,8 @@ extension Array {
      * - ⚠️️IMPORTANT:⚠️️ Do not use this with arrays such as :[Int?], Fixme: ⚠️️ should we rather do idx < .count?
      * ## EXAMPLES:
      * if let item = [a,b,c,d][safe:3] {print(item)}
-     * - Note: you can also do Optional(arr[4]) maybe?
+     * - Note: you can also do Optional(arr[4]) maybe? no you cant, will be an error
+     * - Note: You can do: arr.count < idx ? arr[idx] : nil
      */
     public subscript(safe index: Index) -> Iterator.Element? {
         if indices.contains(index) { return self[index] }
