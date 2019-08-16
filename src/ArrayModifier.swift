@@ -166,9 +166,9 @@ public class ArrayModifier {
     /**
      * Returns PARAM: array with out the items in PARAM: these
      * - NOTE: only removed the first instance, if there are duplicates in the PARAM: array then they will not be removed
-     * ## EXAMPLES:
+     * ## Examples:
      * print("Result: "+removeThese(["A","B","C","D","F","G"], ["B","C","A","f","F"]));//D,G
-     * - IMPORTANT: ⚠️️ compares reference not value, create a similar method if you need to compare value
+     * - Important: ⚠️️ compares reference not value, create a similar method if you need to compare value
      */
     public static func removeMany<T>(_ array:inout [T], _ many: [T]) -> [T] {
         many.forEach {
@@ -176,6 +176,16 @@ public class ArrayModifier {
             if index != -1 { array.remove(at: index) }
         }
         return array
+    }
+    /*
+    * Removes many item
+    * - Note: Using set ensures that thre are no duplicates in the indecies
+    * Examples:
+    * ["cats", "dogs", "chimps", "moose", "squarrel", "cow"].removeMany(at: [0, 3, 4])
+    * - Remark: you can also do this one-liner: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].reversed().forEach { [0, 3, 4].remove(at: $0) }
+    */
+    public static func remove(at indexes: IndexSet) {
+        indexes.reversed().forEach{ self.remove(at: $0) }
     }
     /**
      * - NOTE: apple provides a native method aswell: [1,2,3].removeAll().count//0
@@ -191,9 +201,9 @@ public class ArrayModifier {
     }
     /**
      * Returns PARAM: array with out the items in PARAM: these by the PARAM: key
-     * ## EXAMPLE:
+     * ## Examples:
      * print("result: " + ArrayParser.describe(removeTheseByKey([{name:"Alf"},{name:"Bert"},{name:"Bill"},{name:"John"},{name:"James"},{name:"Chuck"}], ["Bert","James","Chuck"], "name")));//Alf,Bill,John
-     * - IMPORTANT: ⚠️️ Compares value not reference, if reference comparing is need then create another method for that case
+     * - Important: ⚠️️ Compares value not reference, if reference comparing is need then create another method for that case
      */
     public static func removeManyByKey<T>(_ array:inout [[String: T]], _ many: [T], _ key: String) -> [[String: T]] where T: Comparable {
         var i: Int = 0
