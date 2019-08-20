@@ -108,6 +108,14 @@ public class ArrayParser {
         }
         return uniqueList
     }
+    /*
+    * unique([1,2,3,4,5], limit: 3) // 4,2,5
+    */
+    public static func unique<T>(_ elements:[T], limit: Int) -> {
+      let shuffledIndices = (0..<elements.count).indices.shuffled()
+      let uniqueRandomIndecies = shuffledIndices[(0..<Swift.max(elements.count, limit))]
+      return uniqueRandomIndecies.map { elements[$0] }
+    }
     /**
      * Returns the first item in an array
      * - NOTE: there is also the native: [1,2,3].first//1
