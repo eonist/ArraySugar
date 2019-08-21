@@ -14,13 +14,13 @@ public class ArrayAsserter {
      * ArrayAsserter.contains([1,2,3], [1,2], true)//false, the length of a and b must be the same
      */
     public static func contains<T: Equatable>(_ a: [T], _ b: [T], _ strict: Bool = false) -> Bool {
-        var score: Int = 0
-        a.forEach { x in
-            if b.firstIndex(of: x) != nil {
-                score += 1
-            }
-        }
-        return score == (strict ? a.count : b.count)
+        // var score: Int = 0
+        // a.forEach { x in
+        //     if b.first { $0 == x } { score += 1 }
+        // }
+        // return score == (strict ? a.count : b.count)
+        let intersection = a.filter { item in b.first { $0 == item } != nil }
+        return intersection.count == (strict ? a.count : b.count)
     }
     /**
      * Asserts if an array has an item
