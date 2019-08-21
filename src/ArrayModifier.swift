@@ -180,12 +180,12 @@ public class ArrayModifier {
     /*
     * Removes many item
     * - Note: Using set ensures that thre are no duplicates in the indecies
-    * Examples:
+    * ## Examples:
     * ["cats", "dogs", "chimps", "moose", "squarrel", "cow"].removeMany(at: [0, 3, 4])
     * - Remark: you can also do this one-liner: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"].reversed().forEach { [0, 3, 4].remove(at: $0) }
     */
-    public static func remove(at indexes: IndexSet) {
-        indexes.reversed().forEach{ self.remove(at: $0) }
+    public static func remove(at indices: IndexSet) {
+        indices.sorted().reversed().forEach{ self.remove(at: $0) } // we have to sort and reverse indices to remove many items
     }
     /**
      * - NOTE: apple provides a native method aswell: [1,2,3].removeAll().count//0
