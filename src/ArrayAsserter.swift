@@ -98,4 +98,10 @@ public class ArrayAsserter {
     public static func isArr(arr: Any) -> Bool {
         return arr is AnyArray
     }
+    /**
+     * Asserts if an array has all items in an index array
+     */
+    public static func hasAllItems<T>(_ arr: [T], indices: [Int]) -> Bool {
+        return indices.first { $0 < arr.count } == nil
+    }
 }
