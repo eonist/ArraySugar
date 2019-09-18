@@ -111,7 +111,7 @@ public class ArrayParser {
     /*
     * unique([1,2,3,4,5], limit: 3) // 4,2,5
     */
-    public static func unique<T>(_ elements:[T], limit: Int) -> {
+    public static func unique<T>(_ elements: [T], limit: Int) -> [T] {
       let shuffledIndices = (0..<elements.count).indices.shuffled()
       let uniqueRandomIndecies = shuffledIndices[(0..<Swift.min(elements.count, limit))]
       return uniqueRandomIndecies.map { elements[$0] }

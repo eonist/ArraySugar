@@ -19,7 +19,7 @@ public class ArrayAsserter {
         //     if b.first { $0 == x } { score += 1 }
         // }
         // return score == (strict ? a.count : b.count)
-        let intersection = a.filter { item in b.first { $0 == item } != nil }
+        let intersection = a.filter { item in b.contains(item) }
         return intersection.count == (strict ? a.count : b.count)
     }
     /**

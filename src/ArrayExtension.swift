@@ -58,7 +58,7 @@ extension Array {
      * - Remark: 1 equals, does not exist
      */
     public mutating func removeAt(_ i: Int) {
-      ArrayModifier.removeAt(self, i)
+      _ = ArrayModifier.removeAt(array: &self, i: i)
         //if i != -1 { _ = self.splice2(i, 1) }
     }
 
@@ -70,8 +70,8 @@ extension Array {
     * Swift.print("arr:  \(arr)") // ["2"]
     */
    @discardableResult
-   public mutating func removeFirst(_ item: Element) -> Element? {
-      return ArrayModifier.delete(self, item)
+   public mutating func removeFirst(_ item: inout Element) -> Element? {
+      return ArrayModifier.delete(&self, &item)
    }
     /**
      * Convenience method
