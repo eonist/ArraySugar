@@ -1,9 +1,22 @@
 {
-  "commitish" : "dcca3cc8f02aaada24600e701cdc000c5dd7d3ae",
+  "Mac" : [
+    {
+      "name" : "RangeSugarMacOS",
+      "hash" : "2c084569cc5917e2752e7bedcb2142e5a77e87be70c85e97335a26c8fe5bef75",
+      "swiftToolchainVersion" : "5.0 (swiftlang-1001.0.69.5 clang-1001.0.46.3)"
+    }
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "b55e0eff6f753359fc7be5cb89537441e4431786",
   "iOS" : [
     {
       "name" : "RangeSugarIOS",
-      "hash" : "0b80c19daf32fc3996d134e14a5c03c7b04c6394bd5fc7a33e3cf7f39e50209c",
+      "hash" : "f084ca346e5bc2f85482d3a3f0aac7111083c1d8b38e3896f3063ebf27cd0b43",
       "swiftToolchainVersion" : "5.0 (swiftlang-1001.0.69.5 clang-1001.0.46.3)"
     }
   ]
