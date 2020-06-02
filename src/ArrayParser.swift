@@ -187,7 +187,7 @@ public class ArrayParser {
      * ## EXAMPLES:
      * let ranArr = ArrayParser.uniqueRandom(0, 4)
      * print(ranArr)//[3, 1, 0, 4, 2]
-     * - NOTE: There is also IntParser.random
+     * - NOTE: There is also IntParser.random and ArrayParser.unique
      * - Fixme: ⚠️️ Use functional programming or write an example that utilizes functional programming
      */
     public static func uniqueRandom(_ min: Int, _ max: Int) -> [Int] {

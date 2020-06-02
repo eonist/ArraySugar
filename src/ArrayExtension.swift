@@ -167,10 +167,10 @@ extension Array {
      * - RATIONAL 2: using if let in conjunction with array avoids out of bound crashing
      * - NOTE: Performance wise `self.dropFirst(at).first` is as fast as doing .contain,
      * - ⚠️️IMPORTANT:⚠️️ Do not use this with arrays such as :[Int?], Fixme: ⚠️️ should we rather do idx < .count?
-     * ## EXAMPLES:
-     * if let item = [a,b,c,d][safe:3] {print(item)}
+     * ## Examples:
+     * if let item = [a, b, c, d][safe: 3] { print(item) }
      * - Note: you can also do Optional(arr[4]) maybe? no you cant, will be an error
-     * - Note: You can do: arr.count < idx ? arr[idx] : nil
+     * - Note: You can do: idx < arr.count ? arr[idx] : nil
      */
     public subscript(safe index: Index) -> Iterator.Element? {
         if indices.contains(index) { return self[index] }
