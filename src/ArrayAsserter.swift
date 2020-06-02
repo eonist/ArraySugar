@@ -10,7 +10,7 @@ public class ArrayAsserter {
       var tempArr: [T] = inputArr
       var last: T = tempArr[tempArr.count - 1]
       var hasDups: Bool = false
-      while tempArr.count > 0 {
+      while !tempArr.isEmpty {
          last = tempArr[tempArr.count - 1]
          tempArr = Array(tempArr[0..<(tempArr.count - 1)])
          if tempArr.contains(last) { hasDups = true; break }
