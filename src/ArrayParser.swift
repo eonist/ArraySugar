@@ -74,7 +74,7 @@ public class ArrayParser {
     /**
      * Returns an array with itmes that are not the same in 2 arrays
      * ## EXAMPLES:
-     * difference([1,2,3],[1,2,3,4,5,6]); // 4,5,6
+     * difference([1,2,3], [1,2,3,4,5,6]); // 4,5,6
      * - IMPORTANT: compares reference not value
      */
     public static func difference<T>(_ a: [T], _ b: [T]) -> [T] {
@@ -84,12 +84,18 @@ public class ArrayParser {
         return diff
     }
     /**
-     * ## EXAMPLES: similar([1, 2, 3, 10, 100],[1, 2, 3, 4, 5, 6])
+     * ## Examples: similar([1, 2, 3, 10, 100],[1, 2, 3, 4, 5, 6])
      * - NOTE: the orgiginal version of this method is a little different, it uses an indexOf call
-     * - IMPORTANT: this compares value similarity not reference, make a similar method if its needed for references aswell, or add some more logic to this method to support both. A bool flag can differentiate etc
+     * - IMPORTANT: ⚠️️ this compares value similarity not reference, make a similar method if its needed for references aswell, or add some more logic to this method to support both. A bool flag can differentiate etc
      */
     public static func similar<T: Equatable>(_ a: [T], _ b: [T]) -> [T] { // Fixme: Add support for COmparable to this method
-       return a.filter { x in b.contains { x == $0 } }
+       a.filter { x in b.contains { x == $0 } }
+    }
+    /**
+    * Same as similar but returns indicies
+    */
+    public static func similarIndicies<T: Equatable>(_ a: [T], _ b: [T]) -> [Int] { // Fixme: Add support for COmparable to this method
+       a.enumerated().filter { x in b.contains { x.element == $0 } }.map { $0.offset }
     }
     /**
      * Returns a list unique with all the unique Int from PARAM: ints
