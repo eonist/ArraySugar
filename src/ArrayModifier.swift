@@ -47,7 +47,7 @@ public class ArrayModifier {
      * Removes items from array from start until delCount, and optionally inserts values
      * - RETURNS: An array containing the elements that were removed from the original array.
      * - NOTE: splice can also be used to remove item from array
-     * ## EXAMPLES: [1,2,3,4].splice(0, 1).count//3
+     * ## EXAMPLES: [1,2,3,4].splice(0, 1).count // 3
      * ## EXAMPLES: splice(["spinach","green pepper","cilantro","onion","avocado"],0, 1, ["tomato"])// tomato,green pepper, cilantro,onion,avocado
      * - IMPORTANT: ⚠️️ the original array is modified
      * - IMPORTANT: ⚠️️ back and forth with this method, first it returned the removed elements, then it returned the resulting array, now its confirmed that splice should return the removed elements, this can cause some problems with legacy code. Be carefull
@@ -306,10 +306,11 @@ public class ArrayModifier {
     }
     /**
      * Split an array at integer, returns a new array with arrays in it of the split
-     * ## EXAMPLES:
+     * ## Examples:
      * let arr = ["1","2","3","4","5","6"]
      * let newArr = ArrayModifier.splitAtEvery(arr,3)
      * Swift.print(newArr)//[["1", "2", "3"], ["4", "5", "6"]]
+     * Fixme: use chunked method instead: https://www.hackingwithswift.com/example-code/language/how-to-split-an-array-into-chunks or find it in lightstream code
      */
     public static func splitAtEvery<T>(_ array: [T], _ every: Int = 1 ) -> [[T]] {
         var every = every
@@ -388,14 +389,15 @@ public class ArrayModifier {
     }
     /**
      * Removes duplicates
-     * NOTE: the following two lines may be more efficient try to factor them and see if they are good
-     * ## EXAMPLES:
+     * - Note: the following two lines may be more efficient try to factor them and see if they are good
+     * ## Examples:
      * var arr: Array = ["a","b","b","c","b","d","c"]
      * let arr: [String] = ["a","b","b","c","b","d","c"];var z:[String] = [] Swift.print(arr.forEach{if(z.index(of: $0) == nil) {z.append($0)}})//["a", "b", "c", "d"]
      */
     public static func removeDuplicates<T>(_ array: [T]) -> [T] where T: Comparable {
         var result: [T] = []
         array.forEach {
+           // fixme: ⚠️️use contains instead of firstIndex?
             if result.firstIndex(of: $0) == nil { result.append($0) } // append if doesn't exists
         }
         return result
