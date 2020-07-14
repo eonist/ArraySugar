@@ -339,4 +339,10 @@ extension Array {
    public func concurrentForEach(action: @escaping (Element) -> Void) {
       concurrentMap { _ = action($0) }
    }
+   /**
+    * Convenience
+    */
+   public func concurrentCompactMap<T>(transform: @escaping (Element) -> T) -> [T] {
+      self.concurrentMap(transform: transform).compactMap { $0 }
+   }
 }
