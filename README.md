@@ -2,9 +2,8 @@
 Sugar for array
 
 ### How do I get it
-- Carthage `github "eonist/ArraySugar"`
+- SPM: `.package(url: "https://github.com/eonist/ArraySugar.git", .branch("master"))`
 - Manual Open `.xcodeproj`
-- CocoaPod (Coming soon)
 
 ## Examples:
 **BinaryIndex**
