@@ -493,4 +493,12 @@ public class ArrayModifier {
         array.append(item)
         return array
     }
+    /**
+    * removeRange
+    */
+    public static func removeRange(arr:[Any], range: Range<Int>) -> [Any] {
+      let retVal = Array(arr[range])
+         arr.removeSubrange(range)
+        return retVal
+    }
 }
